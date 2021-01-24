@@ -22,59 +22,85 @@ import java.util.TimeZone;
 
 @Configuration
 public class WebMvcConfig {
+
+    /**
+     * DateTime格式化字符串
+     */
+    private static final String DEFAULT_DATETIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
+
+    /**
+     * Date格式化字符串
+     */
+    private static final String DEFAULT_DATE_PATTERN = "yyyy-MM-dd";
+
+    /**
+     * Time格式化字符串
+     */
+    private static final String DEFAULT_TIME_PATTERN = "HH:mm:ss";
     @Bean
     ObjectMapper objectMapper() {
         ObjectMapper ob = new ObjectMapper();
-        ob.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+        ob.setDateFormat(new SimpleDateFormat(DEFAULT_DATETIME_PATTERN));
         ob.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
         JavaTimeModule timeModule = new JavaTimeModule();
         timeModule.addSerializer(LocalDateTime.class,
-                new LocalDateTimeSerializer(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                new LocalDateTimeSerializer(DateTimeFormatter.ofPattern(DEFAULT_DATETIME_PATTERN)));
         timeModule.addSerializer(LocalDate.class,
-                new LocalDateSerializer(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+                new LocalDateSerializer(DateTimeFormatter.ofPattern(DEFAULT_DATE_PATTERN)));
         timeModule.addSerializer(LocalTime.class,
-                new LocalTimeSerializer(DateTimeFormatter.ofPattern("HH:mm:ss")));
+                new LocalTimeSerializer(DateTimeFormatter.ofPattern(DEFAULT_TIME_PATTERN)));
         timeModule.addDeserializer(LocalDateTime.class,
-                new LocalDateTimeDeserializer(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                new LocalDateTimeDeserializer(DateTimeFormatter.ofPattern(DEFAULT_DATETIME_PATTERN)));
         timeModule.addDeserializer(LocalDate.class,
-                new LocalDateDeserializer(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+                new LocalDateDeserializer(DateTimeFormatter.ofPattern(DEFAULT_DATE_PATTERN)));
         timeModule.addDeserializer(LocalTime.class,
-                new LocalTimeDeserializer(DateTimeFormatter.ofPattern("HH:mm:ss")));
+                new LocalTimeDeserializer(DateTimeFormatter.ofPattern(DEFAULT_TIME_PATTERN)));
         ob.registerModule(timeModule);
         return ob;
     }
-
     @Bean
     public Converter<String, Date> dateConverter() {
-        return new Converter<>() {
+        Converter<String, Date> converter = new Converter<String, Date>() {
             @Override
-            public Date convert(String source) {
-                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            public Date convert(String s) {
+                SimpleDateFormat formatter = new SimpleDateFormat(DEFAULT_DATETIME_PATTERN);
                 try {
-                    return formatter.parse(source);
+                    return formatter.parse(s);
                 } catch (Exception e) {
-                    throw new RuntimeException(String.format("Error parsing %s to Date", source));
+                    throw new RuntimeException(String.format("Error parsing %s to Date", s));
                 }
             }
         };
+        return converter;
     }
     @Bean
     public Converter<String, LocalDate> localDateConverter() {
-        return new Converter<>() {
+        return new Converter<String, LocalDate>() {
             @Override
             public LocalDate convert(String source) {
-                return LocalDate.parse(source, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                return LocalDate.parse(source, DateTimeFormatter.ofPattern(DEFAULT_DATE_PATTERN));
+            }
+        };
+    }
+    @Bean
+    public Converter<String, LocalDateTime> localDateTimeConverter() {
+        return new Converter<String, LocalDateTime>() {
+            @Override
+            public LocalDateTime convert(String source) {
+                return LocalDateTime.parse(source, DateTimeFormatter.ofPattern(DEFAULT_DATETIME_PATTERN));
+            }
+        };
+    }
+    @Bean
+    public Converter<String, LocalTime> localTimeConverter() {
+        return new Converter<String, LocalTime>() {
+            @Override
+            public LocalTime convert(String source) {
+                return LocalTime.parse(source, DateTimeFormatter.ofPattern(DEFAULT_TIME_PATTERN));
             }
         };
     }
 
-    @Bean
-    public Converter<String, LocalDateTime> localDateTimeConverter() {
-        return new Converter<>() {
-            @Override
-            public LocalDateTime convert(String source) {
-                return LocalDateTime.parse(source, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-            }
-        };
-    }
+
+
 }

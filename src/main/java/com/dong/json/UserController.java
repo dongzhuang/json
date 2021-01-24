@@ -1,9 +1,6 @@
 package com.dong.json;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -24,4 +21,9 @@ public class UserController {
     public void addUser(@RequestBody User user) {
         System.out.println(user);
     }
+    @PostMapping("/user2")
+    public void addUser2(User user) {
+        System.out.println(user);
+    }
+
 }
