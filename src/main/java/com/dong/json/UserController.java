@@ -17,10 +17,12 @@ public class UserController {
         user.setAge(10);
         return user;
     }
+
     @PostMapping("/user")
     public void addUser(@RequestBody User user) {
         System.out.println(user);
     }
+
     @PostMapping("/user2")
     public void addUser2(User user) {
         System.out.println(user);

@@ -37,6 +37,7 @@ public class WebMvcConfig {
      * Time格式化字符串
      */
     private static final String DEFAULT_TIME_PATTERN = "HH:mm:ss";
+
     @Bean
     ObjectMapper objectMapper() {
         ObjectMapper ob = new ObjectMapper();
@@ -58,6 +59,7 @@ public class WebMvcConfig {
         ob.registerModule(timeModule);
         return ob;
     }
+
     @Bean
     public Converter<String, Date> dateConverter() {
         Converter<String, Date> converter = new Converter<String, Date>() {
@@ -73,6 +75,7 @@ public class WebMvcConfig {
         };
         return converter;
     }
+
     @Bean
     public Converter<String, LocalDate> localDateConverter() {
         return new Converter<String, LocalDate>() {
@@ -82,6 +85,7 @@ public class WebMvcConfig {
             }
         };
     }
+
     @Bean
     public Converter<String, LocalDateTime> localDateTimeConverter() {
         return new Converter<String, LocalDateTime>() {
@@ -91,6 +95,7 @@ public class WebMvcConfig {
             }
         };
     }
+
     @Bean
     public Converter<String, LocalTime> localTimeConverter() {
         return new Converter<String, LocalTime>() {
@@ -100,7 +105,6 @@ public class WebMvcConfig {
             }
         };
     }
-
 
 
 }
